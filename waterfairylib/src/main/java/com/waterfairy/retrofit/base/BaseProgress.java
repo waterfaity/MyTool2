@@ -1,29 +1,27 @@
 package com.waterfairy.retrofit.base;
 
-import com.waterfairy.retrofit.download.DownloadInfo;
-
 /**
  * Created by shui on 2017/5/6.
  */
 
 public class BaseProgress implements OnBaseProgressListener {
-    private OnBaseListener onDownloadListener;//开放给用户的接口
-    private OnBaseProgressSuccessListener onDownloadSuccessListener;//内部接口 下载完成时关闭control
-    private DownloadInfo downloadInfo;//下载信息
+    private OnProgressListener onProgressListener;//开放给用户的接口
+    private OnBaseProgressSuccessListener onBaseProgressSuccessListener;//内部接口 下载完成时关闭control
+    private BaseProgressInfo downloadInfo;//下载/上传信息
 
-    public void setOnDownloadListener(OnBaseListener onDownloadListener) {
-        this.onDownloadListener = onDownloadListener;
-
-    }
-
-    public OnBaseListener getOnDownloadListener() {
-        return onDownloadListener;
+    public void setOnProgressListener(OnProgressListener onBaseListener) {
+        this.onProgressListener = onBaseListener;
 
     }
 
-    public BaseProgress(DownloadInfo downloadInfo, OnBaseProgressSuccessListener onDownloadSuccessListener) {
+    public OnProgressListener getOnProgressListener() {
+        return onProgressListener;
+
+    }
+
+    public BaseProgress(BaseProgressInfo downloadInfo, OnBaseProgressSuccessListener onBaseProgressSuccessListener) {
         this.downloadInfo = downloadInfo;
-        this.onDownloadSuccessListener = onDownloadSuccessListener;
+        this.onBaseProgressSuccessListener = onBaseProgressSuccessListener;
     }
 
 
@@ -32,11 +30,11 @@ public class BaseProgress implements OnBaseProgressListener {
         current = downloadInfo.getLastLen() + current;
         downloadInfo.setCurrentLen(current);
         if (done) {
-            downloadInfo.setState(DownloadInfo.FINISH);
-            onDownloadSuccessListener.onDownloadSuccess(downloadInfo.getUrl());
+            downloadInfo.setState(BaseProgressInfo.FINISH);
+            onBaseProgressSuccessListener.onProgressSuccess(downloadInfo.getUrl());
         }
-        if (onDownloadListener != null)
-            onDownloadListener.onDownloading(done, downloadInfo.getTotalLen(), current);
+        if (onProgressListener != null)
+            onProgressListener.onDownloading(done, downloadInfo.getTotalLen(), current);
     }
 
 }

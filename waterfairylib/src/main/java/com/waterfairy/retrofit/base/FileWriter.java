@@ -23,7 +23,7 @@ public class FileWriter {
      * @param responseBody
      * @param info
      */
-    public void writeFile(OnBaseListener onDownloadListener, ResponseBody responseBody, DownloadInfo info) {
+    public void writeFile(OnProgressListener onDownloadListener, ResponseBody responseBody, DownloadInfo info) {
         File file = new File(info.getSavePath());
         long totalLen = 0;
         long currentLen = info.getCurrentLen();

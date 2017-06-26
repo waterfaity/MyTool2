@@ -5,5 +5,5 @@ package com.waterfairy.retrofit.base;
  */
 
 public interface OnBaseProgressSuccessListener {
-    void onDownloadSuccess(String url);
+    void onProgressSuccess(String url);
 }

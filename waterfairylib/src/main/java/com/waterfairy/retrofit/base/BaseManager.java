@@ -29,6 +29,7 @@ public abstract class BaseManager extends IBaseManager {
     public static final int ERROR_IS_DOWNLOADING = 9;//文件已在下载中
     public static final int ERROR_HAS_FINISHED = 10;//文件已经下载完成
     public static final int ERROR_HAS_STOP = 11;//文件下载已停止
+    public static final int ERROR_FILE_NOT_FOUND = 12;//文件不存在
     //    针对所有
     public static final int ERROR_NO_DOWNLOAD = 100;//没有下载任务
     public static final int REMOVE = 101;//移除

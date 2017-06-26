@@ -7,6 +7,13 @@ package com.waterfairy.retrofit.base;
 
 public class BaseProgressInfo {
 
+    public static final int START = 1;
+    public static final int DOWNLOADING = 2;
+    public static final int PAUSE = 3;
+    public static final int STOP = 4;
+    public static final int FINISH = 5;
+    public static final int ERROR = 6;
+
     protected String url;//下载路径
     protected String basePath;//基础路径
     protected long currentLen;//当前下载的位置

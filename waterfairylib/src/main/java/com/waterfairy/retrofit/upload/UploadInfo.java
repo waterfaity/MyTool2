@@ -2,18 +2,26 @@ package com.waterfairy.retrofit.upload;
 
 import com.waterfairy.retrofit.base.BaseProgressInfo;
 
+import java.util.HashMap;
+
 /**
  * Created by water_fairy on 2017/6/26.
  * 995637517@qq.com
  */
 
 public class UploadInfo extends BaseProgressInfo {
-    public UploadInfo(String basePath, String url) {
+    private HashMap<String, String> hashMap;
+    private String filePath;
+    private String fileName;
+
+
+    public UploadInfo(String basePath, String url, String filePath, String fileName) {
         this.basePath = basePath;
         this.url = url;
+        this.filePath = filePath;
+        this.fileName = fileName;
     }
 
-    private String fileName;
 
     public String getFileName() {
         return fileName;
@@ -21,5 +29,17 @@ public class UploadInfo extends BaseProgressInfo {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public HashMap<String, String> getHashMap() {
+        return hashMap;
+    }
+
+    public void setHashMap(HashMap<String, String> hashMap) {
+        this.hashMap = hashMap;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 }

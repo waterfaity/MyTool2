@@ -21,7 +21,12 @@ import retrofit2.http.Url;
  * 995637517@qq.com
  */
 
-public interface IUploadService extends IBaseService {
+public interface IUploadService  {
+    @POST()
+    @Multipart
+    Call<ResponseBody> upload(@Url String url,
+                              @Part MultipartBody.Part part);
+
     @POST()
     @Multipart
     Call<ResponseBody> upload(@Url String url,

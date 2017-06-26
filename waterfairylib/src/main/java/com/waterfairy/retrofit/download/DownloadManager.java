@@ -11,7 +11,8 @@ import com.waterfairy.retrofit.upload.UploadInfo;
  * 995637517@qq.com
  */
 
-public class DownloadManager extends BaseManager {
+public class
+DownloadManager extends BaseManager {
     public static DownloadManager DOWNLOAD_MANGER;
 
     private DownloadManager() {
@@ -26,7 +27,7 @@ public class DownloadManager extends BaseManager {
 
     @Override
     protected DownloadControl newDownloadControl(BaseProgressInfo downloadInfo) {
-        return new DownloadControl((DownloadInfo) downloadInfo);
+        return new DownloadControl(downloadInfo);
     }
 
     @Override
