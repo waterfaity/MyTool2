@@ -42,11 +42,15 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     private String nameString;
 
-    /** 保证只有一个CrashHandler实例 */
+    /**
+     * 保证只有一个CrashHandler实例
+     */
     private CrashHandler() {
     }
 
-    /** 获取CrashHandler实例 ,单例模式 */
+    /**
+     * 获取CrashHandler实例 ,单例模式
+     */
     public static CrashHandler getInstance() {
         return INSTANCE;
     }
@@ -64,9 +68,11 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         Thread.setDefaultUncaughtExceptionHandler(this);
         return this;
     }
+
     private String path;
-    public void setPath(String path){
-        this.path=path;
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
 
@@ -113,7 +119,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         // 收集设备参数信息
         collectDeviceInfo(mContext);
         // 保存日志文件
-        String fileName = saveCrashInfo2File(ex);
+        saveCrashInfo2File(ex);
         return true;
     }
 
@@ -153,7 +159,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
      * 保存错误信息到文件中
      *
      * @param ex
-     * @return 返回文件名称,便于将文件传送到服务器
+     * @return 返回文件名称, 便于将文件传送到服务器
      */
     private String saveCrashInfo2File(Throwable ex) {
 
@@ -183,10 +189,15 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                     + ".log";
             if (Environment.getExternalStorageState().equals(
                     Environment.MEDIA_MOUNTED)) {
-                File dir = new File(path);
-                if (!dir.exists()) {
-                    dir.mkdirs();
+                File file = new File(path, fileName);
+                if (!file.exists()) {
+                    File dir = new File(fileName);
+                    if (!dir.exists()) {
+                        dir.mkdirs();
+                    }
+                    file.createNewFile();
                 }
+
                 FileOutputStream fos = new FileOutputStream(path + fileName);
                 fos.write(sb.toString().getBytes());
                 fos.close();

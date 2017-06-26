@@ -1,5 +1,12 @@
 package com.waterfairy.retrofit.download;
 
+import com.waterfairy.retrofit.base.BaseManager;
+import com.waterfairy.retrofit.base.BaseProgress;
+import com.waterfairy.retrofit.base.FileWriter;
+import com.waterfairy.retrofit.base.IBaseControl;
+import com.waterfairy.retrofit.base.OnBaseListener;
+import com.waterfairy.retrofit.base.OnBaseProgressSuccessListener;
+
 import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by shui on 2017/5/6.
  */
 
-public class DownloadControl implements IDownloadControl, OnDownloadSuccessListener {
+public class DownloadControl implements IBaseControl, OnBaseProgressSuccessListener {
     public static final int INIT = 0;
     public static final int START = 1;
     public static final int DOWNLOADING = 2;
@@ -26,7 +33,7 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
 
     private DownloadInfo downloadInfo;
     private IDownloadService downloadService;
-    private DownloadProgress downloadProgress;
+    private BaseProgress downloadProgress;
     private Call<ResponseBody> call;
     private String url;
     private int downloadState;
@@ -43,7 +50,7 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
 
     private void initDownload() {
         if (downloadService == null) {
-            downloadProgress = new DownloadProgress(downloadInfo, this);
+            downloadProgress = new BaseProgress(downloadInfo, this);
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
                     .connectTimeout(downloadInfo.getTimeOut(), TimeUnit.SECONDS)
                     .addInterceptor(new DownloadInterceptor(downloadProgress))
@@ -58,7 +65,7 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
         }
     }
 
-    public DownloadControl setDownloadListener(OnDownloadListener onDownloadListener) {
+    public DownloadControl setDownloadListener(OnBaseListener onDownloadListener) {
         if (downloadProgress != null)
             downloadProgress.setOnDownloadListener(onDownloadListener);
         return this;
@@ -67,12 +74,12 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
     @Override
     public void start() {
         if (downloadState == DOWNLOADING) {
-            returnError(DownloadManager.ERROR_IS_DOWNLOADING);
+            returnError(BaseManager.ERROR_IS_DOWNLOADING);
         } else if (downloadState == FINISH) {
-            returnError(DownloadManager.ERROR_HAS_FINISHED);
+            returnError(BaseManager.ERROR_HAS_FINISHED);
 //        }
-//        else  if (downloadState == DownloadManager.STOP) {
-//            returnError(DownloadManager.ERROR_HAS_STOP);
+//        else  if (downloadState == BaseManager.STOP) {
+//            returnError(BaseManager.ERROR_HAS_STOP);
         } else {
             call = downloadService.download("bytes=" + downloadInfo.getCurrentLen() + "-", url);
             call.enqueue(new Callback<ResponseBody>() {
@@ -86,15 +93,15 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                    returnError(DownloadManager.ERROR_NET);
+                    returnError(BaseManager.ERROR_NET);
                 }
             });
-            OnDownloadListener downloadListener = getDownloadListener();
+            OnBaseListener downloadListener = getDownloadListener();
             if (downloadListener != null) {
                 if (downloadState == PAUSE || downloadState == STOP) {
-                    returnChange(DownloadManager.CONTINUE);
+                    returnChange(BaseManager.CONTINUE);
                 } else {
-                    returnChange(DownloadManager.START);
+                    returnChange(BaseManager.START);
                 }
             }
             downloadState = DOWNLOADING;
@@ -103,17 +110,17 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
 
 
     private void returnChange(int code) {
-        OnDownloadListener downloadListener = getDownloadListener();
+        OnBaseListener downloadListener = getDownloadListener();
         if (downloadListener != null) downloadListener.onChange(code);
     }
 
     private void returnError(int code) {
-        OnDownloadListener downloadListener = getDownloadListener();
+        OnBaseListener downloadListener = getDownloadListener();
         if (downloadListener != null) downloadListener.onError(code);
     }
 
-    private OnDownloadListener getDownloadListener() {
-        OnDownloadListener onDownloadListener = null;
+    private OnBaseListener getDownloadListener() {
+        OnBaseListener onDownloadListener = null;
         if (downloadProgress != null)
             onDownloadListener = downloadProgress.getOnDownloadListener();
         return onDownloadListener;
@@ -122,7 +129,7 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
     @Override
     public void pause() {
         handle(PAUSE);
-        returnChange(DownloadManager.PAUSE);
+        returnChange(BaseManager.PAUSE);
     }
 
     private void handle(int state) {
@@ -140,7 +147,7 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
             File file = new File(downloadInfo.getSavePath());
             if (file.exists()) file.delete();
         }
-        returnChange(DownloadManager.STOP);
+        returnChange(BaseManager.STOP);
     }
 
     public int getState() {
@@ -151,6 +158,6 @@ public class DownloadControl implements IDownloadControl, OnDownloadSuccessListe
     public void onDownloadSuccess(String url) {
         downloadState = FINISH;
         DownloadManager.getInstance().onFinished(url);
-        returnChange(DownloadManager.FINISHED);
+        returnChange(BaseManager.FINISHED);
     }
 }

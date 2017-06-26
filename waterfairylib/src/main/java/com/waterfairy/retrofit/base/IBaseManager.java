@@ -1,17 +1,20 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit.base;
+
+import com.waterfairy.retrofit.download.DownloadControl;
+import com.waterfairy.retrofit.download.DownloadInfo;
 
 /**
  * Created by shui on 2017/5/6.
  */
 
-public interface IDownloadManager {
+public abstract class IBaseManager {
     /**
      * 添加下载
      *
      * @param downloadInfo
      * @return
      */
-    DownloadControl add(DownloadInfo downloadInfo);
+   abstract IBaseControl add(BaseProgressInfo downloadInfo);
 
     /**
      * 获取下载
@@ -19,38 +22,38 @@ public interface IDownloadManager {
      * @param url
      * @return
      */
-    DownloadControl get(String url);
+    abstract IBaseControl get(String url);
 
     /**
      * 移除下载(会删除当前下载中的文件)
      *
      * @param url
      */
-    boolean remove(String url);
+    abstract  boolean remove(String url);
 
     /**
      * 移除所有下载(会删除当前下载中的文件)
      */
-    boolean removeAll();
+    abstract   boolean removeAll();
 
     /**
      * 暂停所有下载
      */
-    boolean pauseAll();
+    abstract  boolean pauseAll();
 
     /**
      * 停止所有下载
      */
-    boolean stopAll();
+    abstract   boolean stopAll();
 
     /**
      * 开始所有下载
      */
-    boolean startAll();
+    abstract  boolean startAll();
 
     /**
      * 下载完成
      * @param url
      */
-    void onFinished(String url);
+    abstract  void onFinished(String url);
 }

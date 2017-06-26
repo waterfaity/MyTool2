@@ -1,5 +1,7 @@
 package com.waterfairy.retrofit.download;
 
+import com.waterfairy.retrofit.base.OnBaseProgressListener;
+
 import java.io.IOException;
 
 import okhttp3.MediaType;
@@ -17,11 +19,11 @@ import okio.Source;
 public class DownloadResponseBody extends ResponseBody {
 
     private ResponseBody responseBody;
-    private OnDownloadingListener downloadingListener;
+    private OnBaseProgressListener downloadingListener;
     private BufferedSource bufferedSource;
     private long totalLen;
 
-    public DownloadResponseBody(ResponseBody responseBody, OnDownloadingListener downloadingListener) {
+    public DownloadResponseBody(ResponseBody responseBody, OnBaseProgressListener downloadingListener) {
         this.responseBody = responseBody;
         this.downloadingListener = downloadingListener;
     }

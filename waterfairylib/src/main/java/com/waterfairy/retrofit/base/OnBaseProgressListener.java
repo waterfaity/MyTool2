@@ -1,9 +1,9 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit.base;
 
 /**
  * Created by shui on 2017/5/6.
  */
 
-public interface OnDownloadingListener {
+public interface OnBaseProgressListener {
     void onDownloading(boolean done, long total, long current);
 }

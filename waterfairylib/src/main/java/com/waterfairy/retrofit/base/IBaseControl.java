@@ -1,13 +1,13 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit.base;
 
 /**
  * Created by shui on 2017/4/26.
  * 文件下载控制 返回boolean  值为isDownloading
  */
 
-public interface IDownloadControl {
+public interface IBaseControl {
     /**
-     * 开始 继续下载
+     * 开始 继续
      * @return isDownloading
      */
     void start();

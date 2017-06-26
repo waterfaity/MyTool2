@@ -1,4 +1,6 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit.base;
+
+import com.waterfairy.retrofit.download.DownloadInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +23,7 @@ public class FileWriter {
      * @param responseBody
      * @param info
      */
-    public void writeFile(OnDownloadListener onDownloadListener, ResponseBody responseBody, DownloadInfo info) {
+    public void writeFile(OnBaseListener onDownloadListener, ResponseBody responseBody, DownloadInfo info) {
         File file = new File(info.getSavePath());
         long totalLen = 0;
         long currentLen = info.getCurrentLen();
@@ -49,17 +51,17 @@ public class FileWriter {
                     }
                     responseBody.byteStream().close();
                 } catch (IOException | NullPointerException e) {
-                    onDownloadListener.onError(DownloadManager.PAUSE);
+                    onDownloadListener.onError(BaseManager.PAUSE);
                 }
                 channelOut.close();
                 randomAccessFile.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                onDownloadListener.onError(DownloadManager.ERROR_FILE_SAVE);
+                onDownloadListener.onError(BaseManager.ERROR_FILE_SAVE);
             }
 
         } else {
-            onDownloadListener.onError(DownloadManager.ERROR_FILE_CREATE);
+            onDownloadListener.onError(BaseManager.ERROR_FILE_CREATE);
         }
     }
 

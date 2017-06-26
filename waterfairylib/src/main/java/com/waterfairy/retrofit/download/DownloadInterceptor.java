@@ -1,5 +1,7 @@
 package com.waterfairy.retrofit.download;
 
+import com.waterfairy.retrofit.base.OnBaseProgressListener;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -10,9 +12,9 @@ import okhttp3.Response;
  */
 
 public class DownloadInterceptor implements Interceptor {
-    private OnDownloadingListener downloadingListener;
+    private OnBaseProgressListener downloadingListener;
 
-    public DownloadInterceptor(OnDownloadingListener downloadingListener) {
+    public DownloadInterceptor(OnBaseProgressListener downloadingListener) {
         this.downloadingListener = downloadingListener;
     }
 

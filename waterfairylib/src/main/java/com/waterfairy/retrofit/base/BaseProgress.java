@@ -1,25 +1,27 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit.base;
+
+import com.waterfairy.retrofit.download.DownloadInfo;
 
 /**
  * Created by shui on 2017/5/6.
  */
 
-public class DownloadProgress implements OnDownloadingListener {
-    private OnDownloadListener onDownloadListener;//开放给用户的接口
-    private OnDownloadSuccessListener onDownloadSuccessListener;//内部接口 下载完成时关闭control
+public class BaseProgress implements OnBaseProgressListener {
+    private OnBaseListener onDownloadListener;//开放给用户的接口
+    private OnBaseProgressSuccessListener onDownloadSuccessListener;//内部接口 下载完成时关闭control
     private DownloadInfo downloadInfo;//下载信息
 
-    public void setOnDownloadListener(OnDownloadListener onDownloadListener) {
+    public void setOnDownloadListener(OnBaseListener onDownloadListener) {
         this.onDownloadListener = onDownloadListener;
 
     }
 
-    public OnDownloadListener getOnDownloadListener() {
+    public OnBaseListener getOnDownloadListener() {
         return onDownloadListener;
 
     }
 
-    public DownloadProgress(DownloadInfo downloadInfo, OnDownloadSuccessListener onDownloadSuccessListener) {
+    public BaseProgress(DownloadInfo downloadInfo, OnBaseProgressSuccessListener onDownloadSuccessListener) {
         this.downloadInfo = downloadInfo;
         this.onDownloadSuccessListener = onDownloadSuccessListener;
     }

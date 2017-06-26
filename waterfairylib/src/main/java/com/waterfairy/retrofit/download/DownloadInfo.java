@@ -1,10 +1,12 @@
 package com.waterfairy.retrofit.download;
 
+import com.waterfairy.retrofit.base.BaseProgressInfo;
+
 /**
  * Created by shui on 2017/4/26.
  */
 
-public abstract class DownloadInfo {
+public abstract class DownloadInfo extends BaseProgressInfo{
     public DownloadInfo(){
 
     }
@@ -21,14 +23,14 @@ public abstract class DownloadInfo {
         this.url = url;
     }
 
-    protected String url;//下载路径
-    protected String basePath;//基础路径
+//    protected String url;//下载路径
+//    protected String basePath;//基础路径
     protected String savePath;//保存路径
-    protected long currentLen;//当前下载的位置
-    protected long lastLen;//上次下载的位置
-    protected long totalLen;//总长度
-    protected int timeOut = 5;//超时 s
-    protected int state;//下载状态
+//    protected long currentLen;//当前下载的位置
+//    protected long lastLen;//上次下载的位置
+//    protected long totalLen;//总长度
+//    protected int timeOut = 5;//超时 s
+//    protected int state;//下载状态
 
     public abstract String getUrl();
 
