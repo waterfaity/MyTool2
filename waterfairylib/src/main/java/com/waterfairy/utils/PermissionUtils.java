@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 
 /**
@@ -39,7 +38,6 @@ public class PermissionUtils {
      * @param activity Activity
      * @param request  请求类型
      */
-//    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public static void requestPermission(Activity activity, int request) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
         String[] permissions = null;
@@ -49,11 +47,11 @@ public class PermissionUtils {
                 permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION};
                 permission = Manifest.permission.ACCESS_COARSE_LOCATION;
                 break;
-            case REQUEST_STORAGE:
+            case REQUEST_CAMERA:
                 permissions = new String[]{Manifest.permission.CAMERA};
                 permission = Manifest.permission.CAMERA;
                 break;
-            case REQUEST_CAMERA:
+            case REQUEST_STORAGE:
                 permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE
                         , Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 permission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -74,6 +72,7 @@ public class PermissionUtils {
      * @param permission  权限
      * @param request     requestCode  Activity中 会返回权限申请状态(类似startActivityForResult)
      */
+
     public static void requestPermission(Activity activity,
                                          @NonNull String[] permissions,
                                          @NonNull String permission,

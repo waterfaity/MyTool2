@@ -84,7 +84,7 @@ public class FileWriter {
             if (canSave) {
                 try {
                     canSave = file.createNewFile();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     canSave = false;
                 }

@@ -1,6 +1,8 @@
 package com.waterfairy.tool2.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         PermissionUtils.requestPermission(this, PermissionUtils.REQUEST_STORAGE);
-        PermissionUtils.requestPermission(this, PermissionUtils.REQUEST_LOCATION);
     }
 
     public void onClick(View view) {
@@ -27,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, DownloadActivity.class));
                 break;
         }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
     }
 }

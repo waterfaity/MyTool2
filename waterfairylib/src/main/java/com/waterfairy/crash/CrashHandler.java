@@ -40,7 +40,6 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
 
     // 用于格式化日期,作为日志文件名的一部分
     private DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-    private String nameString;
 
     /**
      * 保证只有一个CrashHandler实例
@@ -185,22 +184,32 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
         try {
             long timestamp = System.currentTimeMillis();
             String time = formatter.format(new Date());
-            String fileName = nameString + "-" + time + "-" + timestamp
+            String fileName = time + "-" + timestamp
                     + ".log";
             if (Environment.getExternalStorageState().equals(
                     Environment.MEDIA_MOUNTED)) {
+                boolean canSave = false;
                 File file = new File(path, fileName);
                 if (!file.exists()) {
-                    File dir = new File(fileName);
+                    File dir = new File(path);
                     if (!dir.exists()) {
-                        dir.mkdirs();
+                        canSave = dir.mkdirs();
                     }
-                    file.createNewFile();
+                    try {
+                        canSave = file.createNewFile();
+                    } catch (Exception e) {
+                        canSave = false;
+                    }
+
+                } else {
+                    canSave = true;
+                }
+                if (canSave) {
+                    FileOutputStream fos = new FileOutputStream(path + fileName);
+                    fos.write(sb.toString().getBytes());
+                    fos.close();
                 }
 
-                FileOutputStream fos = new FileOutputStream(path + fileName);
-                fos.write(sb.toString().getBytes());
-                fos.close();
             }
             return fileName;
         } catch (Exception e) {
