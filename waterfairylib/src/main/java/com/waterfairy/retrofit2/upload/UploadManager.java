@@ -1,8 +1,8 @@
-package com.waterfairy.retrofit.upload;
+package com.waterfairy.retrofit2.upload;
 
-import com.waterfairy.retrofit.base.BaseManager;
-import com.waterfairy.retrofit.base.BaseProgressInfo;
-import com.waterfairy.retrofit.download.DownloadControl;
+import com.waterfairy.retrofit2.base.BaseManager;
+import com.waterfairy.retrofit2.base.BaseProgressInfo;
+import com.waterfairy.retrofit2.download.DownloadControl;
 
 /**
  * Created by water_fairy on 2017/6/26.

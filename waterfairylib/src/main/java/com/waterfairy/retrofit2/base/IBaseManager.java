@@ -1,7 +1,4 @@
-package com.waterfairy.retrofit.base;
-
-import com.waterfairy.retrofit.download.DownloadControl;
-import com.waterfairy.retrofit.download.DownloadInfo;
+package com.waterfairy.retrofit2.base;
 
 /**
  * Created by shui on 2017/5/6.

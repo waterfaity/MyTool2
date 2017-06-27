@@ -1,6 +1,6 @@
-package com.waterfairy.retrofit.upload;
+package com.waterfairy.retrofit2.upload;
 
-import com.waterfairy.retrofit.base.BaseProgress;
+import com.waterfairy.retrofit2.base.BaseProgress;
 
 import java.io.IOException;
 
@@ -79,14 +79,15 @@ class UploadRequestBody extends RequestBody {
                 if (contentLength == 0) {
                     //获得contentLength的值，后续不再调用
                     contentLength = contentLength();
+                    baseProgress.setTotalLen(contentLength);
                 }
                 //增加当前写入的字节数
                 bytesWritten += byteCount;
                 //回调
                 if (bytesWritten < contentLength) {
-                    baseProgress.onDownloading(true, contentLength, bytesWritten);
-                } else {
                     baseProgress.onDownloading(false, contentLength, bytesWritten);
+                } else {
+                    baseProgress.onDownloading(true, contentLength, bytesWritten);
                 }
             }
         };

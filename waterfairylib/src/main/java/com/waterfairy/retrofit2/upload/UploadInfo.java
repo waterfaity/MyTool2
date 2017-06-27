@@ -1,6 +1,6 @@
-package com.waterfairy.retrofit.upload;
+package com.waterfairy.retrofit2.upload;
 
-import com.waterfairy.retrofit.base.BaseProgressInfo;
+import com.waterfairy.retrofit2.base.BaseProgressInfo;
 
 import java.util.HashMap;
 

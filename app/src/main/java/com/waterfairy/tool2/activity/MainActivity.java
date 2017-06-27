@@ -25,8 +25,12 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.widget:
                 startActivity(new Intent(this, HistogramActivity.class));
-                break;   case R.id.down:
+                break;
+            case R.id.down:
                 startActivity(new Intent(this, DownloadActivity.class));
+                break;
+            case R.id.webview:
+                startActivity(new Intent(this, WebViewActivity.class));
                 break;
         }
 

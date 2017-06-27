@@ -31,6 +31,14 @@
                 android:clickable="true"
                 android:onClick="onClick"
                 android:text="down" />
+
+            <Button
+                android:id="@+id/webview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:text="webview" />
         </LinearLayout>
     </ScrollView>
 

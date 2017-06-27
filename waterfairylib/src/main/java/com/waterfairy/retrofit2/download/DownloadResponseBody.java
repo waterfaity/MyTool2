@@ -1,6 +1,6 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit2.download;
 
-import com.waterfairy.retrofit.base.OnBaseProgressListener;
+import com.waterfairy.retrofit2.base.OnBaseProgressListener;
 
 import java.io.IOException;
 

@@ -30,4 +30,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     compile files('libs/sun.misc.BASE64Decoder.jar')
     compile files('libs/zixing-core-3.2.0.jar')
+    compile 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
 }

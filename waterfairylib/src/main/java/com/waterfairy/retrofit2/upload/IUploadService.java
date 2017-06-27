@@ -1,6 +1,4 @@
-package com.waterfairy.retrofit.upload;
-
-import com.waterfairy.retrofit.base.IBaseService;
+package com.waterfairy.retrofit2.upload;
 
 import java.util.Map;
 
@@ -14,6 +12,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 /**
@@ -22,18 +21,19 @@ import retrofit2.http.Url;
  */
 
 public interface IUploadService  {
+    @Streaming
     @POST()
     @Multipart
     Call<ResponseBody> upload(@Url String url,
                               @Part MultipartBody.Part part);
-
+    @Streaming
     @POST()
     @Multipart
     Call<ResponseBody> upload(@Url String url,
                               @Header("RANGE") String start,
                               @QueryMap Map<String, String> options,
                               @Part MultipartBody.Part part);
-
+    @Streaming
     @POST()
     @Multipart
     Call<ResponseBody> uploadNoParam(@Url String url,

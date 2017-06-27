@@ -1,11 +1,12 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit2.download;
 
-import com.waterfairy.retrofit.base.BaseManager;
-import com.waterfairy.retrofit.base.BaseProgress;
-import com.waterfairy.retrofit.base.BaseProgressInfo;
-import com.waterfairy.retrofit.base.FileWriter;
-import com.waterfairy.retrofit.base.IBaseControl;
-import com.waterfairy.retrofit.base.OnBaseProgressSuccessListener;
+import com.waterfairy.retrofit2.base.BaseManager;
+import com.waterfairy.retrofit2.base.BaseProgress;
+import com.waterfairy.retrofit2.base.BaseProgressInfo;
+import com.waterfairy.retrofit2.base.FileWriter;
+import com.waterfairy.retrofit2.base.IBaseControl;
+import com.waterfairy.retrofit2.base.OnBaseProgressSuccessListener;
+import com.waterfairy.retrofit2.base.OnProgressListener;
 
 import java.io.File;
 import java.util.concurrent.Executors;
@@ -52,9 +53,8 @@ public class DownloadControl extends IBaseControl implements OnBaseProgressSucce
     }
 
 
-    @Override
     public void start() {
-        if (baseProgressState == BaseManager.CONTINUE) {
+        if (baseProgressState == BaseManager.CONTINUE || baseProgressState == BaseManager.START) {
             returnError(BaseManager.ERROR_IS_DOWNLOADING);
         } else if (baseProgressState == BaseManager.FINISHED) {
             returnError(BaseManager.ERROR_HAS_FINISHED);
@@ -62,23 +62,33 @@ public class DownloadControl extends IBaseControl implements OnBaseProgressSucce
 //        else  if (baseProgressState == BaseManager.STOP) {
 //            returnError(BaseManager.ERROR_HAS_STOP);
         } else {
+            returnChange(BaseManager.START);
             call = downloadService.download("bytes=" + baseProgressInfo.getCurrentLen() + "-", url);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                    returnChange(BaseManager.CONTINUE);
                     new FileWriter().writeFile(
-                            getDownloadListener(),
+                            getLoadListener(),
                             response.body(),
                             (DownloadInfo) baseProgressInfo);
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable throwable) {
+                    baseProgressState=BaseManager.ERROR_NET;
                     returnError(BaseManager.ERROR_NET);
                 }
             });
-           super.start();
         }
+    }
+
+    @Override
+    public void pause() {
+        if (BaseManager.PAUSE == baseProgressState) return;
+        if (call != null)
+            call.cancel();
+        returnChange(BaseManager.PAUSE);
     }
 
 
@@ -90,6 +100,21 @@ public class DownloadControl extends IBaseControl implements OnBaseProgressSucce
             if (file.exists()) file.delete();
         }
         returnChange(BaseManager.STOP);
+    }
+
+    @Override
+    public OnProgressListener getLoadListener() {
+        OnProgressListener onProgressListener = null;
+        if (baseProgress != null)
+            onProgressListener = baseProgress.getOnProgressListener();
+        return onProgressListener;
+    }
+
+    @Override
+    public DownloadControl setLoadListener(OnProgressListener onProgressListener) {
+        if (baseProgress != null)
+            baseProgress.setOnProgressListener(onProgressListener);
+        return this;
     }
 
 

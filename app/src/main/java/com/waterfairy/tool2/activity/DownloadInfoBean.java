@@ -1,6 +1,6 @@
 package com.waterfairy.tool2.activity;
 
-import com.waterfairy.retrofit.download.DownloadInfo;
+import com.waterfairy.retrofit2.download.DownloadInfo;
 
 /**
  * Created by water_fairy on 2017/6/26.

@@ -1,9 +1,7 @@
-package com.waterfairy.retrofit.base;
+package com.waterfairy.retrofit2.base;
 
-import com.waterfairy.retrofit.download.DownloadControl;
-import com.waterfairy.retrofit.download.DownloadInfo;
-import com.waterfairy.retrofit.upload.UploadControl;
-import com.waterfairy.retrofit.upload.UploadInfo;
+import com.waterfairy.retrofit2.download.DownloadControl;
+import com.waterfairy.retrofit2.upload.UploadControl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -83,6 +81,7 @@ public abstract class BaseManager extends IBaseManager {
     public boolean remove(String url) {
         if (stop(url)) {
             controlHashMap.remove(url);
+            if (onAllHandleListener != null) onAllHandleListener.onAllHandle(REMOVE);
             return true;
         }
         return false;

@@ -1,10 +1,7 @@
-package com.waterfairy.retrofit.interceptor;
-
-import android.util.Log;
+package com.waterfairy.retrofit2.interceptor;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import okhttp3.FormBody;

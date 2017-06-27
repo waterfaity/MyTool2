@@ -1,6 +1,6 @@
-package com.waterfairy.retrofit.download;
+package com.waterfairy.retrofit2.download;
 
-import com.waterfairy.retrofit.base.BaseProgressInfo;
+import com.waterfairy.retrofit2.base.BaseProgressInfo;
 
 /**
  * Created by shui on 2017/4/26.

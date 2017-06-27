@@ -1,6 +1,4 @@
-package com.waterfairy.retrofit.download;
-
-import com.waterfairy.retrofit.base.IBaseService;
+package com.waterfairy.retrofit2.download;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

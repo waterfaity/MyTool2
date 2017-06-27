@@ -1,4 +1,4 @@
-package com.waterfairy.retrofit.base;
+package com.waterfairy.retrofit2.base;
 
 /**
  * Created by shui on 2017/5/6.
@@ -34,7 +34,11 @@ public class BaseProgress implements OnBaseProgressListener {
             onBaseProgressSuccessListener.onProgressSuccess(downloadInfo.getUrl());
         }
         if (onProgressListener != null)
-            onProgressListener.onDownloading(done, downloadInfo.getTotalLen(), current);
+            onProgressListener.onLoading(done, downloadInfo.getTotalLen(), current);
+    }
+
+    public void setTotalLen(long totalLen) {
+        downloadInfo.setTotalLen(totalLen);
     }
 
 }

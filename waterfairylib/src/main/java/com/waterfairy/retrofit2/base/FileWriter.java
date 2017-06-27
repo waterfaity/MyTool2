@@ -1,6 +1,6 @@
-package com.waterfairy.retrofit.base;
+package com.waterfairy.retrofit2.base;
 
-import com.waterfairy.retrofit.download.DownloadInfo;
+import com.waterfairy.retrofit2.download.DownloadInfo;
 
 import java.io.File;
 import java.io.IOException;
