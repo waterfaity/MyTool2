@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
+//import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -49,7 +49,7 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
         mBgColor = Color.WHITE;
         mSurfaceHolder = getHolder();
         mSurfaceHolder.setFormat(PixelFormat.TRANSPARENT);//透明
-        setZOrderOnTop(true);//置顶
+        setZOrderOnTop(true);
         viewDrawObserver = new ViewDrawObserver();
         mSurfaceHolder.addCallback(this);
     }
@@ -68,7 +68,7 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
         this.widthMeasureSpec = widthMeasureSpec;
         this.heightMeasureSpec = heightMeasureSpec;
-        Log.i(TAG, "drawWidth:  " + mWidth + "--" + mHeight);
+//        Log.i(TAG, "drawWidth:  " + mWidth + "--" + mHeight);
 
     }
 
@@ -96,6 +96,9 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
             public void run() {
                 while (isDrawing) {
                     float ratio = 0;
+                    if (currentTimes < 0) {
+                        currentTimes = 0;
+                    }
                     ratio = currentTimes / (float) times;//绘画过的比例
                     Canvas canvas = null;
                     try {
@@ -147,7 +150,7 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         hasCreate = false;
-        Log.i(TAG, "surfaceDestroyed: ");
+//        Log.i(TAG, "surfaceDestroyed: ");
         isDrawing = false;
         viewDrawObserver.onUpdate(ViewCreateObserver.TYPE_VIEW, false);
     }
@@ -163,6 +166,7 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
                 hasCreate = state;
                 viewState = state;
             } else if (type == TYPE_DATA) {
+                currentTimes = -1;//防止0的时候刚好加1   没有0的情况
                 hasInitData = state;
                 hasDrawFinish = false;
                 dataState = state;
@@ -199,7 +203,7 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
     }
 
     public float getTextLen(String content, float textSize) {
-        if (textSize == 0 || TextUtils.isEmpty(content)) return 0;
+        if (TextUtils.isEmpty(content) || textSize <= 0) return 0;
         Paint paint = new Paint();
         paint.setTextSize(textSize);
         return paint.measureText(content);
@@ -218,6 +222,5 @@ public abstract class BaseSurfaceView extends SurfaceView implements SurfaceHold
     private void onCreateOk() {
         viewDrawObserver.onUpdate(ViewCreateObserver.TYPE_VIEW, true);
     }
-
 
 }

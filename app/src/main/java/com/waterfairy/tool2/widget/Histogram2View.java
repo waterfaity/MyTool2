@@ -3,13 +3,16 @@ package com.waterfairy.tool2.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Shader;
 import android.util.AttributeSet;
 
 import com.waterfairy.widget.baseView.BaseSurfaceView;
 import com.waterfairy.widget.baseView.Coordinate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,15 +29,18 @@ public class Histogram2View extends BaseSurfaceView {
     private Coordinate mYTopContentCoordinate, mXRightContentCoordinate;//折线图左上角点坐标
     private Coordinate mZeroCoordinate;//零点坐标
     private String mXTitle, mYTitle;//xy文字
-    private int mTextColor, mXColor, mLineColor;//颜色
-    private Paint mTextPaint, mXPaint, mLinePaint;//paint
+    private int mTextColor, mXColor, mLineColor, mCircleColor;//颜色
+    private Paint mTextPaint, mXPaint, mLinePaint, mCirclePointPaint, mShadowPaint;//paint
     private float mTextSize;//文字大小
     private float mTriangleWidth;
     private int mXNum = 7;//x轴数量 默认7个
     private int mYNum = 5;//y轴数量
-    private float mPerWidth;
-    private float mPerHeight, mPerYValue;
-    private Path mXPath, mYPath, mLinePath;
+    private float mPerWidth;//x轴平均宽度(/mXNum)
+    private float mPerHeight, mPerYValue;//y轴平均高度(/mYNum  /y轴最大值)
+    private Path mXPath, mYPath, mLinePath, mShadowPath;
+    private int mStrokeWidth;//边缘线宽度
+    private int mCirclePointRadius;//圆点半径
+    private int mShadowDownColor, mShadowUpColor;//过度颜色
 
 
     public Histogram2View(Context context) {
@@ -43,10 +49,19 @@ public class Histogram2View extends BaseSurfaceView {
 
     public Histogram2View(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mStrokeWidth = (int) (context.getResources().getDisplayMetrics().density * 1);
         mTextSize = context.getResources().getDisplayMetrics().density * 12;
         mTextColor = Color.parseColor("#ff0000");
         mXColor = Color.parseColor("#ff00ff");
         mLineColor = Color.parseColor("#00ffff");
+        mCirclePointRadius = mStrokeWidth * 2;
+        mCircleColor = mLineColor;
+        mShadowUpColor = Color.parseColor("#00FF00");
+        mShadowDownColor = Color.parseColor("#0000FF00");
+    }
+
+    public void setStrokeWidth(int strokeWidth) {
+        mStrokeWidth = strokeWidth;
     }
 
     public void initColor(int textColor, int xColor, int lineColor) {
@@ -54,6 +69,11 @@ public class Histogram2View extends BaseSurfaceView {
         this.mXColor = xColor;
         this.mLineColor = lineColor;
 
+    }
+
+    public void initCirclePointData(int color, int radius) {
+        this.mCircleColor = color == 0 ? mLineColor : color;
+        this.mCirclePointRadius = radius == 0 ? mStrokeWidth * 2 : radius;
     }
 
     public void initTextSize(int textSize) {
@@ -82,12 +102,25 @@ public class Histogram2View extends BaseSurfaceView {
         mTextPaint.setTextSize(mTextSize);
 
         mXPaint = new Paint();
+        mXPaint.setStrokeWidth(2);
         mXPaint.setColor(mXColor);
         mXPaint.setAntiAlias(true);
 
         mLinePaint = new Paint();
+        mLinePaint.setStrokeWidth(2);
         mLinePaint.setColor(mLineColor);
         mLinePaint.setAntiAlias(true);
+        mLinePaint.setStyle(Paint.Style.STROKE);
+
+        mCirclePointPaint = new Paint();
+        mCirclePointPaint.setColor(mLineColor);
+        mCirclePointPaint.setAntiAlias(true);
+        mCirclePointPaint.setStyle(Paint.Style.FILL);
+
+        mShadowPaint = new Paint();
+        mShadowPaint.setAntiAlias(true);
+        Shader shader = new LinearGradient(0, 0, 0, mHeight, mShadowUpColor, mShadowDownColor, Shader.TileMode.REPEAT);
+        mShadowPaint.setShader(shader);
     }
 
     @Override
@@ -96,6 +129,12 @@ public class Histogram2View extends BaseSurfaceView {
         initCoordinate();
         initXYData();
         initPath();
+    }
+
+    private void initShadowColor(int upColor, int downColor) {
+        this.mShadowUpColor = upColor;
+        this.mShadowDownColor = downColor;
+
     }
 
     private void initPath() {
@@ -115,15 +154,28 @@ public class Histogram2View extends BaseSurfaceView {
         mXPath.lineTo(mXTriangleCoordinate.x + temp1, mXTriangleCoordinate.y);
         mXPath.lineTo(mXTriangleCoordinate.x, mXTriangleCoordinate.y + temp2);
 
-        //折线
+        //折线 及 点
+        mCoordinateList = new ArrayList<>();
         mLinePath = new Path();
         mLinePath.close();
+        float startY = 0, endX = 0;
         for (int i = 0; i < mDataList.size(); i++) {
             float x = mZeroCoordinate.x + i * mPerWidth;
             float y = mZeroCoordinate.y - mDataList.get(i).getValue() * mPerHeight;
-            if (i == 0) mLinePath.moveTo(x, y);
-            else mLinePath.lineTo(x, y);
+            mCoordinateList.add(new Coordinate(x, y));
+            if (i == 0) {
+                mLinePath.moveTo(x, y);
+                startY = y;
+            } else mLinePath.lineTo(x, y);
+            if (i == mDataList.size() - 1) {
+                endX = x;
+            }
         }
+        //过度区域
+        mShadowPath = new Path(mLinePath);
+        mShadowPath.lineTo(endX, mZeroCoordinate.y);
+        mShadowPath.lineTo(mZeroCoordinate.x, mZeroCoordinate.y);
+        mShadowPath.lineTo(mZeroCoordinate.x, startY);
 
     }
 
@@ -177,13 +229,12 @@ public class Histogram2View extends BaseSurfaceView {
 
     @Override
     protected void startDraw() {
-//        setClock((canvas, value) -> {
-//
-//
-//        });
-        Canvas canvas = mSurfaceHolder.lockCanvas();
+        setClockNo();
+    }
+
+    @Override
+    protected void drawOne(Canvas canvas) {
         drawSteady(canvas);
-        mSurfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     private void drawSteady(Canvas canvas) {
@@ -210,6 +261,23 @@ public class Histogram2View extends BaseSurfaceView {
         }
 
         canvas.drawPath(mLinePath, mLinePaint);
+        for (int i = 0; mCoordinateList != null & i < mCoordinateList.size(); i++) {
+            Coordinate coordinate = mCoordinateList.get(i);
+            canvas.drawCircle(coordinate.x, coordinate.y, mCirclePointRadius, mCirclePointPaint);
+            String value = mDataList.get(i).getValue() + "";
+            float textLen = getTextLen(value, mTextSize);
+            float textX = coordinate.x - textLen / 2;
+            float textY = coordinate.y - mTextSize;
+
+            if (i == 0) {
+                textX += mTextSize;
+                textY += mTextSize;
+            }
+            canvas.drawText(value, textX, textY, mTextPaint);
+        }
+
+        canvas.drawPath(mShadowPath, mShadowPaint);
+
 
     }
 

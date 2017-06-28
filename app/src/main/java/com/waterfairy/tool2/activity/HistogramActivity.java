@@ -38,7 +38,6 @@ public class HistogramActivity extends AppCompatActivity {
         histogramEntities.add(histogramEntity5);
         histogramEntities.add(histogramEntity6);
         histogramEntities.add(histogramEntity7);
-
         histogramView2.initTextSize(30);
         histogramView2.initTitle("时间", "本数");
         histogramView2.initData(histogramEntities);
