@@ -8,6 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
+import android.view.View;
 
 import com.waterfairy.widget.baseView.BaseSurfaceView;
 import com.waterfairy.widget.baseView.Coordinate;
@@ -20,27 +22,30 @@ import java.util.List;
  * 995637517@qq.com
  */
 
-public class Histogram2View extends BaseSurfaceView {
+public class Histogram2View extends BaseSurfaceView implements View.OnTouchListener {
     private List<HistogramEntity> mDataList;
     private List<Coordinate> mCoordinateList;
     private Coordinate mYTriangleCoordinate, mXTriangleCoordinate;//y轴三角形顶点,x轴三角形有顶点
     private Coordinate mYTitleCoordinate, mXTitleCoordinate;//xy坐标文字坐标
     private float mYGraduationRight, mXGraduationBottom;//xy坐标文字坐标
     private Coordinate mYTopContentCoordinate, mXRightContentCoordinate;//折线图左上角点坐标
-    private Coordinate mZeroCoordinate;//零点坐标
+    private Coordinate mZeroCoordinate, mZeroForXY;//零点坐标 xy轴交汇点
     private String mXTitle, mYTitle;//xy文字
-    private int mTextColor, mXColor, mLineColor, mCircleColor;//颜色
-    private Paint mTextPaint, mXPaint, mLinePaint, mCirclePointPaint, mShadowPaint;//paint
+    private int mTextColor, mXColor, mLineColor, mCircleColor, mXLineColor;//颜色
+    private Paint mTextPaint, mXPaint, mLinePaint, mCirclePointPaint, mShadowPaint, mXLinePaint;//paint
     private float mTextSize;//文字大小
     private float mTriangleWidth;
     private int mXNum = 7;//x轴数量 默认7个
-    private int mYNum = 5;//y轴数量
+    private int mYNum = 4;//y轴坐标分段 如 5个坐标 4段
     private float mPerWidth;//x轴平均宽度(/mXNum)
-    private float mPerHeight, mPerYValue;//y轴平均高度(/mYNum  /y轴最大值)
+    private float mPerHeight, mPerYValue;//y轴平均高度(/mYNum-1  /y轴最大值)
     private Path mXPath, mYPath, mLinePath, mShadowPath;
-    private int mStrokeWidth;//边缘线宽度
+    private int mLineStrokeWidth, mXLineStrokeWidth;//边缘线宽度
     private int mCirclePointRadius;//圆点半径
     private int mShadowDownColor, mShadowUpColor;//过度颜色
+    private OnTouchListener onTouchListener;
+    private boolean mZeroCenter;
+    private int tag;
 
 
     public Histogram2View(Context context) {
@@ -49,22 +54,30 @@ public class Histogram2View extends BaseSurfaceView {
 
     public Histogram2View(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mStrokeWidth = (int) (context.getResources().getDisplayMetrics().density * 1);
+        mLineStrokeWidth = (int) (context.getResources().getDisplayMetrics().density * 1);
+        mXLineStrokeWidth = mLineStrokeWidth * 2;
         mTextSize = context.getResources().getDisplayMetrics().density * 12;
         mTextColor = Color.parseColor("#ff0000");
+        mXLineColor = mTextColor;
         mXColor = Color.parseColor("#ff00ff");
         mLineColor = Color.parseColor("#00ffff");
-        mCirclePointRadius = mStrokeWidth * 2;
+        mCirclePointRadius = mLineStrokeWidth * 2;
         mCircleColor = mLineColor;
         mShadowUpColor = Color.parseColor("#00FF00");
         mShadowDownColor = Color.parseColor("#0000FF00");
+        setOnTouchListener(this);
     }
 
-    public void setStrokeWidth(int strokeWidth) {
-        mStrokeWidth = strokeWidth;
+    public void initLineStrokeWidth(int strokeWidth) {
+        mLineStrokeWidth = strokeWidth;
+    }
+
+    public void initXLineStrokeWidth(int strokeWidth) {
+        mXLineStrokeWidth = strokeWidth;
     }
 
     public void initColor(int textColor, int xColor, int lineColor) {
+        this.mXLineColor = textColor;
         this.mTextColor = textColor;
         this.mXColor = xColor;
         this.mLineColor = lineColor;
@@ -73,7 +86,7 @@ public class Histogram2View extends BaseSurfaceView {
 
     public void initCirclePointData(int color, int radius) {
         this.mCircleColor = color == 0 ? mLineColor : color;
-        this.mCirclePointRadius = radius == 0 ? mStrokeWidth * 2 : radius;
+        this.mCirclePointRadius = radius == 0 ? mLineStrokeWidth * 2 : radius;
     }
 
     public void initTextSize(int textSize) {
@@ -101,13 +114,18 @@ public class Histogram2View extends BaseSurfaceView {
         mTextPaint.setColor(mTextColor);
         mTextPaint.setTextSize(mTextSize);
 
+        mXLinePaint = new Paint();
+        mXLinePaint.setAntiAlias(true);
+        mXLinePaint.setColor(mXLineColor);
+        mXLinePaint.setStrokeWidth(mXLineStrokeWidth);
+
         mXPaint = new Paint();
         mXPaint.setStrokeWidth(2);
         mXPaint.setColor(mXColor);
         mXPaint.setAntiAlias(true);
 
         mLinePaint = new Paint();
-        mLinePaint.setStrokeWidth(2);
+        mLinePaint.setStrokeWidth(mLineStrokeWidth);
         mLinePaint.setColor(mLineColor);
         mLinePaint.setAntiAlias(true);
         mLinePaint.setStyle(Paint.Style.STROKE);
@@ -123,6 +141,11 @@ public class Histogram2View extends BaseSurfaceView {
         mShadowPaint.setShader(shader);
     }
 
+    public void initShadowColor(int upColor, int downColor) {
+        this.mShadowUpColor = upColor;
+        this.mShadowDownColor = downColor;
+    }
+
     @Override
     protected void beforeDraw() {
         initPaint();
@@ -131,10 +154,59 @@ public class Histogram2View extends BaseSurfaceView {
         initPath();
     }
 
-    private void initShadowColor(int upColor, int downColor) {
-        this.mShadowUpColor = upColor;
-        this.mShadowDownColor = downColor;
+    private void initCoordinate() {
+        //y轴三角形顶点,x轴三角形有顶点
+        mYTriangleCoordinate = new Coordinate(2 * mTextSize, 2 * mTextSize);
+        mXTriangleCoordinate = new Coordinate(mWidth - 2 * mTextSize, mHeight - mTextSize * 2);
+        //xy坐标文字坐标
+        mYTitleCoordinate = new Coordinate(3f * mTextSize, mTextSize * 2);
+        mXTitleCoordinate = new Coordinate(mWidth - 3 * mTextSize, mHeight - 3 * mTextSize);
+        //折线图左上角点坐标
+        mYTopContentCoordinate = new Coordinate(2 * mTextSize, 4 * mTextSize);
+        mXRightContentCoordinate = new Coordinate(mWidth - 4 * mTextSize, mHeight - 3 * mTextSize);
+        //mZeroCoordinate;//零点坐标
+        mZeroCoordinate = new Coordinate(2 * mTextSize, mHeight - 3 * mTextSize);
+        mZeroForXY = new Coordinate(2 * mTextSize, mHeight - 2 * mTextSize);
 
+        mYGraduationRight = 1.5f * mTextSize;
+        mXGraduationBottom = mHeight - 0.5f * mTextSize;
+
+    }
+
+    private void initXYData() {
+        mTriangleWidth = mTextSize * 5 / 7;
+        mPerWidth = (mXRightContentCoordinate.x - mZeroCoordinate.x) / (mXNum - 1);
+        int maxValue = 0;
+        for (int i = 0; mDataList != null && i < mDataList.size(); i++) {
+            int value = mDataList.get(i).getValue();
+            if (maxValue < value) maxValue = value;
+        }
+        calcPerY(maxValue);
+    }
+
+    private void calcPerY(int maxValue) {// 323   91
+        float maxHeight = mZeroCoordinate.y - mYTopContentCoordinate.y;//最大高度差 (0-maxValue)
+        if (maxValue == 0) {
+            mZeroCenter = true;
+            mZeroCoordinate.y = mZeroCoordinate.y - maxHeight / 2;
+        } else {
+            mZeroCenter = false;
+            if (maxValue < mYNum) {//最大值 3  num = 4
+                mYNum = maxValue;
+                mPerHeight = maxHeight / maxValue;
+                mPerYValue = maxValue / mYNum;
+            } else {//最大值 4-> 更大   num = 4
+                int i = maxValue / mYNum;//分数分成 四份
+                for (int j = 0; j < mYNum; j++) {
+                    int temp = maxValue + j;
+                    if (temp % mYNum == 0) {
+                        mPerYValue = temp / mYNum;
+                        mPerHeight = maxHeight / temp;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     private void initPath() {
@@ -173,59 +245,12 @@ public class Histogram2View extends BaseSurfaceView {
         }
         //过度区域
         mShadowPath = new Path(mLinePath);
-        mShadowPath.lineTo(endX, mZeroCoordinate.y);
-        mShadowPath.lineTo(mZeroCoordinate.x, mZeroCoordinate.y);
-        mShadowPath.lineTo(mZeroCoordinate.x, startY);
+        mShadowPath.lineTo(endX, mZeroForXY.y);
+        mShadowPath.lineTo(mZeroForXY.x, mZeroForXY.y);
+        mShadowPath.lineTo(mZeroForXY.x, startY);
 
     }
 
-    private void initXYData() {
-        mTriangleWidth = mTextSize * 5 / 7;
-        mPerWidth = (mXRightContentCoordinate.x - mZeroCoordinate.x) / (mXNum - 1);
-        int maxValue = 0;
-        for (int i = 0; mDataList != null && i < mDataList.size(); i++) {
-            int value = mDataList.get(i).getValue();
-            if (maxValue < value) maxValue = value;
-        }
-        calcPerY(maxValue);
-
-    }
-
-    private void calcPerY(int maxValue) {// 323   91
-        float maxHeight = mZeroCoordinate.y - mYTopContentCoordinate.y;
-        int i = maxValue / mYNum;
-        if (i == 0) {
-            mPerHeight = maxHeight / mYNum;
-            mPerYValue = 1;
-        } else {
-            for (int j = 0; j < mYNum; j++) {
-                int temp = maxValue + j;
-                if (temp % (mYNum - 1) == 0) {
-                    mPerYValue = temp / (mYNum - 1);
-                    mPerHeight = maxHeight / (temp - 1);
-                    break;
-                }
-            }
-        }
-    }
-
-    private void initCoordinate() {
-//         mYTriangleCoordinate, mXTriangleCoordinate;//y轴三角形顶点,x轴三角形有顶点
-        mYTriangleCoordinate = new Coordinate(2 * mTextSize, 2 * mTextSize);
-        mXTriangleCoordinate = new Coordinate(mWidth - 2 * mTextSize, mHeight - mTextSize * 2);
-//         mYTitleCoordinate, mXTitleCoordinate;//xy坐标文字坐标
-        mYTitleCoordinate = new Coordinate(3f * mTextSize, mTextSize * 2);
-        mXTitleCoordinate = new Coordinate(mWidth - 3 * mTextSize, mHeight - 3 * mTextSize);
-//         mYTopContentCoordinate;//折线图左上角点坐标
-        mYTopContentCoordinate = new Coordinate(2 * mTextSize, 4 * mTextSize);
-        mXRightContentCoordinate = new Coordinate(mWidth - 4 * mTextSize, mHeight - 2 * mTextSize);
-//         mZeroCoordinate;//零点坐标
-        mZeroCoordinate = new Coordinate(2 * mTextSize, mHeight - 2 * mTextSize);
-
-        mYGraduationRight = 1.5f * mTextSize;
-        mXGraduationBottom = mHeight - 0.5f * mTextSize;
-
-    }
 
     @Override
     protected void startDraw() {
@@ -238,10 +263,10 @@ public class Histogram2View extends BaseSurfaceView {
     }
 
     private void drawSteady(Canvas canvas) {
-
+        canvas.drawColor(mBgColor);
         //x轴
-        canvas.drawLine(mZeroCoordinate.x, mZeroCoordinate.y,
-                mXTriangleCoordinate.x, mXTriangleCoordinate.y, mTextPaint);
+        canvas.drawLine(mZeroForXY.x, mZeroForXY.y,
+                mXTriangleCoordinate.x, mXTriangleCoordinate.y, mXLinePaint);
         canvas.drawText(mXTitle, mXTitleCoordinate.x, mXTitleCoordinate.y, mTextPaint);
         canvas.drawPath(mXPath, mXPaint);
         for (int i = 0; i < mDataList.size(); i++) {
@@ -251,16 +276,23 @@ public class Histogram2View extends BaseSurfaceView {
 
 
         //y轴
-        canvas.drawLine(mZeroCoordinate.x, mZeroCoordinate.y,
-                mYTriangleCoordinate.x, mYTriangleCoordinate.y, mTextPaint);
+        canvas.drawLine(mZeroForXY.x, mZeroForXY.y,
+                mYTriangleCoordinate.x, mYTriangleCoordinate.y, mXLinePaint);
         canvas.drawText(mYTitle, mYTitleCoordinate.x, mYTitleCoordinate.y, mTextPaint);
         canvas.drawPath(mYPath, mXPaint);
-        for (int i = 1; i < mYNum; i++) {
+        int yNum = mYNum + 1;
+        if (mZeroCenter) yNum = 1;
+        for (int i = 0; i < yNum; i++) {
             float temp = (mPerYValue * i);
-            canvas.drawText((int) temp + "", mYGraduationRight - getTextLen((int) temp + "", mTextSize), mZeroCoordinate.y - mPerHeight * (temp - 1), mTextPaint);
+            float x = mYGraduationRight - getTextLen((int) temp + "", mTextSize);
+            float y = mZeroCoordinate.y - mPerHeight * temp;
+            canvas.drawText((int) temp + "", x, y, mTextPaint);
+            //画y轴坐标线
+//            canvas.drawLine(mZeroCoordinate.x, y, mXRightContentCoordinate.x, y, mXPaint);
         }
 
         canvas.drawPath(mLinePath, mLinePaint);
+        //画折线上的数据值
         for (int i = 0; mCoordinateList != null & i < mCoordinateList.size(); i++) {
             Coordinate coordinate = mCoordinateList.get(i);
             canvas.drawCircle(coordinate.x, coordinate.y, mCirclePointRadius, mCirclePointPaint);
@@ -270,20 +302,78 @@ public class Histogram2View extends BaseSurfaceView {
             float textY = coordinate.y - mTextSize;
 
             if (i == 0) {
-                textX += mTextSize;
-                textY += mTextSize;
+                textX += (mTextSize / 2);
+
             }
             canvas.drawText(value, textX, textY, mTextPaint);
         }
 
         canvas.drawPath(mShadowPath, mShadowPaint);
-
-
     }
 
     @Override
     protected void drawFinishView(Canvas canvas) {
+        drawSteady(canvas);
+    }
+
+    public void setOnTouch2Listener(OnTouchListener onTouch2Listener) {
+        this.onTouchListener = onTouch2Listener;
 
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+
+                break;
+            case MotionEvent.ACTION_UP:
+                if (onClickHistogramListener != null && !isDrawing)
+                    handlerTouch(event.getX());
+                break;
+
+        }
+
+        return onTouchListener == null || onTouchListener.onTouch(v, event);
+    }
+
+    private void handlerTouch(float upX) {
+        for (int i = 0; i < mXNum; i++) {
+            float tempX = mZeroForXY.x + i * mPerWidth + mPerWidth / 2;
+            if (upX < mZeroForXY.x || upX > mXRightContentCoordinate.x) break;
+            if (upX > mZeroForXY.x && upX < tempX) {
+                onClickHistogramListener.onClickHistogram(i, (int) upX, tag);
+                break;
+            }
+        }
+    }
+
+    private OnClickHistogramListener onClickHistogramListener;
+
+    public void setOnClickHistogramListener(OnClickHistogramListener onClickHistogramListener) {
+        this.onClickHistogramListener = onClickHistogramListener;
+    }
+
+    public void initBgColor(int bgColor) {
+        this.mBgColor = bgColor;
+    }
+
+    public interface OnClickHistogramListener {
+        /**
+         * 点击的pos  以及点击的位置
+         *
+         * @param pos
+         * @param x
+         */
+        void onClickHistogram(int pos, int x, int tag);
+    }
+
+    public void setTag(int tag) {
+        this.tag = tag;
+
+    }
 }

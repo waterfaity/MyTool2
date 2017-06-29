@@ -34,7 +34,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.WebViewActivity"> <intent-filter>
+        <activity android:name=".activity.WebViewActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.TestActivity">  <intent-filter>
             <action android:name="android.intent.action.MAIN" />
         </intent-filter></activity>
     </application>
