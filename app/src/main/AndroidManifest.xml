@@ -39,9 +39,12 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TestActivity">  <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-        </intent-filter></activity>
+        <activity android:name=".activity.TestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.LifeActivity"></activity>
     </application>
 
 </manifest>

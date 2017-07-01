@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.webview:
                 startActivity(new Intent(this, WebViewActivity.class));
                 break;
+            case R.id.life:
+                startActivity(new Intent(this, LifeActivity.class));
+                break;
         }
 
     }

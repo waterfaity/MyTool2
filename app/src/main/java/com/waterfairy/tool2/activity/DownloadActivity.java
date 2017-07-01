@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
@@ -20,6 +21,7 @@ import com.waterfairy.utils.PermissionUtils;
 import com.waterfairy.utils.ToastUtils;
 
 public class DownloadActivity extends AppCompatActivity {
+    private static final String TAG = "downloadActivity";
     private DownloadControl downloadControl;
 
     @Override
@@ -106,5 +108,21 @@ public class DownloadActivity extends AppCompatActivity {
             downloadControl.pause();
         }
 
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finish();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: "+System.currentTimeMillis());
     }
 }
