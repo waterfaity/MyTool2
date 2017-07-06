@@ -9,7 +9,7 @@ import com.waterfairy.retrofit2.download.DownloadInfo;
 
 public class DownloadInfoBean extends DownloadInfo {
 //    protected String url;//下载路径
-//    protected String basePath;//基础路径
+//    protected String pptPath;//基础路径
 //    protected long currentLen;//当前下载的位置
 //    protected long lastLen;//上次下载的位置
 //    protected long totalLen;//总长度

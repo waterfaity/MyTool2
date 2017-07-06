@@ -26,13 +26,13 @@ public class HistogramActivity extends AppCompatActivity implements Histogram2Vi
     private void initView() {
         histogramView2 = (Histogram2View) findViewById(R.id.histogram);
         List<HistogramEntity> histogramEntities = new ArrayList<>();
-        HistogramEntity histogramEntity1 = new HistogramEntity(0, "4.15");
-        HistogramEntity histogramEntity2 = new HistogramEntity(0, "4.16");
-        HistogramEntity histogramEntity3 = new HistogramEntity(0, "4.17");
-        HistogramEntity histogramEntity4 = new HistogramEntity(0, "4.18");
-        HistogramEntity histogramEntity5 = new HistogramEntity(0, "4.19");
-        HistogramEntity histogramEntity6 = new HistogramEntity(0, "4.20");
-        HistogramEntity histogramEntity7 = new HistogramEntity(0, "4.21");
+        HistogramEntity histogramEntity1 = new HistogramEntity(1, "12.15");
+        HistogramEntity histogramEntity2 = new HistogramEntity(67, "12.16");
+        HistogramEntity histogramEntity3 = new HistogramEntity(12, "12.17");
+        HistogramEntity histogramEntity4 = new HistogramEntity(34, "12.18");
+        HistogramEntity histogramEntity5 = new HistogramEntity(68, "12.19");
+        HistogramEntity histogramEntity6 = new HistogramEntity(23, "12.20");
+        HistogramEntity histogramEntity7 = new HistogramEntity(88, "12.21");
         histogramEntities.add(histogramEntity1);
         histogramEntities.add(histogramEntity2);
         histogramEntities.add(histogramEntity3);

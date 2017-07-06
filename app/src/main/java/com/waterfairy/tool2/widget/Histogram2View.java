@@ -300,14 +300,11 @@ public class Histogram2View extends BaseSurfaceView implements View.OnTouchListe
             float textLen = getTextLen(value, mTextSize);
             float textX = coordinate.x - textLen / 2;
             float textY = coordinate.y - mTextSize;
-
             if (i == 0) {
                 textX += (mTextSize / 2);
-
             }
             canvas.drawText(value, textX, textY, mTextPaint);
         }
-
         canvas.drawPath(mShadowPath, mShadowPaint);
     }
 
