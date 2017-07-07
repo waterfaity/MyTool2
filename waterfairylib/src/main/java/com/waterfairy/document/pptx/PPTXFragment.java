@@ -1,4 +1,4 @@
-package com.waterfairy.document.ppt;
+package com.waterfairy.document.pptx;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,16 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.olivephone.office.TempFileManager;
-import com.olivephone.office.powerpoint.DocumentSession;
-import com.olivephone.office.powerpoint.DocumentSessionBuilder;
-import com.olivephone.office.powerpoint.DocumentSessionStatusListener;
-import com.olivephone.office.powerpoint.android.AndroidMessageProvider;
-import com.olivephone.office.powerpoint.android.AndroidSystemColorProvider;
-import com.olivephone.office.powerpoint.android.AndroidTempFileStorageProvider;
-import com.olivephone.office.powerpoint.view.SlideShowNavigator;
-
-import java.io.File;
+import org.apache.poi.xslf.usermodel.XMLSlideShow;
 
 /**
  * 使用itsrts-pptviewer.jar 包
@@ -28,17 +19,15 @@ import java.io.File;
  * 995637517@qq.com
  */
 
-public class PPTFragment extends Fragment {
+public class PPTXFragment extends Fragment {
     private RelativeLayout rootView;
     private ListView listView;
-    private PPTAdapter pptAdapter;
+    private PPTXAdapter pptAdapter;
     private ImageView freshView;
-    private DocumentSession build;
     private String pptPath;
-    private SlideShowNavigator slideShowNavigator;
 
-    public static PPTFragment newInstance() {
-        return new PPTFragment();
+    public static PPTXFragment newInstance() {
+        return new PPTXFragment();
     }
 
     public void setPPTPath(String pptPath) {
@@ -90,16 +79,13 @@ public class PPTFragment extends Fragment {
     }
 
     private void initPPTData() {
-
-
-        new PPTEntity().openPPT(getActivity(), pptPath, new PPTEntity.OnPPTOpenListener() {
-
+        new PPTXEntity().openPPTX(pptPath, new PPTXEntity.OnOpenPPTXListener() {
             @Override
-            public void onReady(final SlideShowNavigator slideShowNavigator) {
+            public void onReady(final XMLSlideShow xmlSlideShow) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        pptAdapter = new PPTAdapter(slideShowNavigator, getActivity(), listView.getWidth());
+                        pptAdapter = new PPTXAdapter(getActivity(), xmlSlideShow, getActivity().getResources().getDisplayMetrics().widthPixels);
                         listView.setAdapter(pptAdapter);
                     }
                 });
@@ -115,6 +101,31 @@ public class PPTFragment extends Fragment {
 
             }
         });
+
+
+//        new PPTEntity().openPPT(getActivity(), pptPath, new PPTEntity.OnPPTOpenListener() {
+//
+//            @Override
+//            public void onReady(final SlideShowNavigator slideShowNavigator) {
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        pptAdapter = new PPTAdapter(slideShowNavigator, getActivity(), listView.getWidth());
+//                        listView.setAdapter(pptAdapter);
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//
+//            }
+//
+//            @Override
+//            public void onOpening() {
+//
+//            }
+//        });
     }
 
 

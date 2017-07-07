@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+/**
+ * 使用poi-3.15.jar
+ * 使用poi-scrtchpad-3.15.jar
+ */
+
 public class WordUtil {
     private final static String TAG = "WordUtil";
     public String htmlPath;

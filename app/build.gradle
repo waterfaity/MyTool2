@@ -11,6 +11,10 @@ android {
         versionName "1.0"
         multiDexEnabled true
     }
+    dexOptions {
+        preDexLibraries = false
+        additionalParameters = ['--core-library']
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -35,7 +39,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':waterfairylib')
-    compile files('src/main/libs/itsrts-pptviewer.jar')
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'

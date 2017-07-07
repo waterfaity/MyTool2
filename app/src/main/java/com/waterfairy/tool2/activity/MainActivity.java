@@ -2,12 +2,14 @@ package com.waterfairy.tool2.activity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
 import com.waterfairy.tool2.R;
+import com.waterfairy.tool2.uttils.ZipUtils;
 import com.waterfairy.utils.PermissionUtils;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,6 +21,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         PermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         PermissionUtils.requestPermission(this, PermissionUtils.REQUEST_STORAGE);
+        test();
+    }
+
+    private void test() {
+        ZipUtils.openZipFile(Environment.getExternalStorageDirectory().getPath() + "/documentTest/pptx.pptx");
     }
 
     public void onClick(View view) {

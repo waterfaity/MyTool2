@@ -23,7 +23,6 @@ public class OpenDocActivity extends AppCompatActivity {
     public void openPPT(View view) {
         path = basePath + "pptx.pptx";
 //        DocumentReadUtils.readPPTX(path);
-        startActivity(new Intent(this, PPTActivity.class));
     }
 
     public void openDOC(View view) {
