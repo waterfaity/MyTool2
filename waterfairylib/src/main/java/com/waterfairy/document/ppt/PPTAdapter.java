@@ -50,17 +50,21 @@ public class PPTAdapter extends BaseAdapter {
         LinearLayout linearLayout = (LinearLayout) convertView;
         linearLayout.removeAllViews();
         PersentationView persentationView = new PersentationView(context, null);
-        linearLayout.addView(persentationView);
+
         int firstSlideNumber = slideShowNavigator.getFirstSlideNumber();
         SlideView slideView = slideShowNavigator.navigateToSlide(persentationView.getGraphicsContext(), firstSlideNumber + position);
         int widthTemp = slideView.a();
         int heightTemp = slideView.b();
-        persentationView.setContentView(slideView);
-        persentationView.notifyScale((float) width / widthTemp / 4);
-        ViewGroup.LayoutParams layoutParams = persentationView.getLayoutParams();
-        layoutParams.width = width;
-        layoutParams.height = (int) ((float) heightTemp * width / widthTemp);
-        persentationView.setLayoutParams(layoutParams);
+        {
+            linearLayout.addView(persentationView);
+            persentationView.setContentView(slideView);
+            persentationView.notifyScale((float) width / widthTemp / 4);
+            ViewGroup.LayoutParams layoutParams = persentationView.getLayoutParams();
+            layoutParams.width = width;
+            layoutParams.height = (int) ((float) heightTemp * width / widthTemp);
+            persentationView.setLayoutParams(layoutParams);
+        }
+
         return convertView;
     }
 }

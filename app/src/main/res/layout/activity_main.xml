@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
 
-    android:layout_height="match_parent"
-    tools:context="com.waterfairy.tool2.activity.MainActivity">
+              android:layout_height="match_parent"
+              tools:context="com.waterfairy.tool2.activity.MainActivity">
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:text="widget" />
+                android:text="widget"/>
 
             <Button
                 android:id="@+id/down"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:text="down" />
+                android:text="down"/>
 
             <Button
                 android:id="@+id/webview"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:text="webview" />
+                android:text="webview"/>
 
             <Button
                 android:id="@+id/life"
@@ -46,7 +46,15 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:onClick="onClick"
-                android:text="life" />
+                android:text="life"/>
+
+            <Button
+                android:id="@+id/document"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:text="document"/>
         </LinearLayout>
     </ScrollView>
 

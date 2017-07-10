@@ -23,17 +23,24 @@ public class PPTEntity implements DocumentSessionStatusListener {
     private OnPPTOpenListener onPPTOpenListener;
 
 
-    public void openPPT(Context context, String path, OnPPTOpenListener listener) {
+    public void openPPT(final Context context, final String path, OnPPTOpenListener listener) {
         onPPTOpenListener = listener;
-        try {
-            AndroidMessageProvider e = new AndroidMessageProvider(context);
-            TempFileManager tmpFileManager = new TempFileManager(new AndroidTempFileStorageProvider(context));
-            AndroidSystemColorProvider sysColorProvider = new AndroidSystemColorProvider();
-            documentSession = (new DocumentSessionBuilder(new File(path))).setMessageProvider(e).setTempFileManager(tmpFileManager).setSystemColorProvider(sysColorProvider).setSessionStatusListener(this).build();
-            documentSession.startSession();
-        } catch (Exception var5) {
-            var5.printStackTrace();
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                    AndroidMessageProvider e = new AndroidMessageProvider(context);
+                    TempFileManager tmpFileManager = new TempFileManager(new AndroidTempFileStorageProvider(context));
+                    AndroidSystemColorProvider sysColorProvider = new AndroidSystemColorProvider();
+                    documentSession = (new DocumentSessionBuilder(new File(path))).setMessageProvider(e).setTempFileManager(tmpFileManager).setSystemColorProvider(sysColorProvider).setSessionStatusListener(PPTEntity.this).build();
+                    documentSession.startSession();
+                } catch (Exception var5) {
+                    var5.printStackTrace();
+                }
+            }
+        }.start();
+
     }
 
     @Override

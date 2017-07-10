@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        PermissionUtils.checkPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         PermissionUtils.requestPermission(this, PermissionUtils.REQUEST_STORAGE);
         test();
     }
@@ -41,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.life:
                 startActivity(new Intent(this, LifeActivity.class));
+                break;   case R.id.document:
+                startActivity(new Intent(this, OpenDocActivity.class));
                 break;
         }
 

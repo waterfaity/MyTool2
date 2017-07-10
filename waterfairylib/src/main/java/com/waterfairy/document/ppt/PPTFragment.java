@@ -35,7 +35,6 @@ public class PPTFragment extends Fragment {
     private ImageView freshView;
     private DocumentSession build;
     private String pptPath;
-    private SlideShowNavigator slideShowNavigator;
 
     public static PPTFragment newInstance() {
         return new PPTFragment();
@@ -68,6 +67,9 @@ public class PPTFragment extends Fragment {
         listView = new ListView(getActivity());
         freshView = new ImageView(getActivity());
         rootView.addView(listView);
+        ViewGroup.LayoutParams layoutParams = listView.getLayoutParams();
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         rootView.addView(freshView);
     }
 
@@ -78,9 +80,7 @@ public class PPTFragment extends Fragment {
                 this.pptPath = pptPath;
             }
         }
-
         initPPTData();
-
     }
 
     @Override
