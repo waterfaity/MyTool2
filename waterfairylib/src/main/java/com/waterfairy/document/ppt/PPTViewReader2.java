@@ -105,7 +105,7 @@ public class PPTViewReader2 extends ScrollView implements DocumentSessionStatusL
     }
 
     private void addChildView(int position) {
-        String bitmapFile = baseCacheImgPath + "ppt/" + MD5Utils.getMD5Code(path + fileSize + position) + ".jpg";
+        String bitmapFile = baseCacheImgPath + "ppt/" + MD5Utils.getMD5Code(path + fileSize + position);
         Bitmap showBitmap = BitmapFactory.decodeFile(bitmapFile);
         if (showBitmap == null) {
             showBitmap = createBitmap(position, bitmapFile);
