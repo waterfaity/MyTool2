@@ -36,7 +36,7 @@ import static android.R.attr.bitmap;
  * 995637517@qq.com
  */
 
-public class PPTViewReader2 extends ScrollView implements DocumentSessionStatusListener {
+public class PPTViewReader extends ScrollView implements DocumentSessionStatusListener {
     private String baseCacheImgPath;
     private DocumentSession session;
     private String path;
@@ -47,7 +47,7 @@ public class PPTViewReader2 extends ScrollView implements DocumentSessionStatusL
     private int width;
     private long fileSize;
 
-    public PPTViewReader2(Context context, AttributeSet attr) {
+    public PPTViewReader(Context context, AttributeSet attr) {
         super(context, attr);
         this.context = context;
         contentView = new LinearLayout(context, attr);

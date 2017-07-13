@@ -8,7 +8,7 @@
     android:background="#11000000"
     tools:context="com.waterfairy.tool2.activity.PPT2Activity">
 
-    <com.waterfairy.document.ppt.PPTViewReader2
+    <com.waterfairy.document.ppt.PPTViewReader
         android:id="@+id/ppt_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
