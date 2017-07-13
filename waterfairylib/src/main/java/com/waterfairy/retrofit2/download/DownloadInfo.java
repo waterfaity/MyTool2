@@ -18,7 +18,7 @@ public class DownloadInfo extends BaseProgressInfo {
         this.url = url;
     }
 
-    private String savePath;//保存路径
+    protected String savePath;//保存路径
 
     public String getSavePath() {
         return savePath;
