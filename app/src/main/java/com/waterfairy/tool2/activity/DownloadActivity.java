@@ -1,21 +1,19 @@
 package com.waterfairy.tool2.activity;
 
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
 import com.waterfairy.retrofit2.base.BaseManager;
+import com.waterfairy.retrofit2.base.MessageUtils;
 import com.waterfairy.retrofit2.base.OnProgressListener;
 import com.waterfairy.retrofit2.download.DownloadControl;
 import com.waterfairy.retrofit2.download.DownloadInfo;
 import com.waterfairy.retrofit2.download.DownloadManager;
-import com.waterfairy.retrofit2.upload.UploadControl;
-import com.waterfairy.retrofit2.upload.UploadInfo;
-import com.waterfairy.retrofit2.upload.UploadManager;
 import com.waterfairy.tool2.R;
 import com.waterfairy.utils.PermissionUtils;
 import com.waterfairy.utils.ToastUtils;
@@ -62,15 +60,20 @@ public class DownloadActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtils.show(code + "");
+                        ToastUtils.show(MessageUtils.getMsg(code));
+
                     }
                 });
-
             }
 
             @Override
-            public void onChange(int code) {
-
+            public void onChange(final int code) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.show(MessageUtils.getMsg(code));
+                    }
+                });
             }
         });
 
@@ -123,6 +126,6 @@ public class DownloadActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy: "+System.currentTimeMillis());
+        Log.i(TAG, "onDestroy: " + System.currentTimeMillis());
     }
 }

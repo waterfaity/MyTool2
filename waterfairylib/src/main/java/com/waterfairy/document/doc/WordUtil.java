@@ -55,10 +55,18 @@ public class WordUtil {
     private String spanColor = "<span style=\"color:%s;\">", spanEnd = "</span>";
     private String divRight = "<div align=\"right\">", divEnd = "</div>";
     private String imgBegin = "<img src=\"%s\" >";
+    private OnDocLoadListener onLoadListener;
+    private String sdPath;
 
-    public WordUtil(String doc_name) {
+    public WordUtil(String doc_name, String sdPath) {
         docPath = doc_name;
-        htmlPath = FileUtil.createFile("html", FileUtil.getFileName(docPath) + ".html");
+        this.sdPath = sdPath;
+    }
+
+
+    public void load(OnDocLoadListener loadListener) {
+        this.onLoadListener = loadListener;
+        htmlPath = FileUtil.createFile(sdPath,"html", FileUtil.getFileName(docPath) + ".html");
         Log.d(TAG, "htmlPath=" + htmlPath);
         try {
             output = new FileOutputStream(new File(htmlPath));
@@ -71,8 +79,14 @@ public class WordUtil {
             }
             output.write(htmlEnd.getBytes());
             output.close();
+            if (onLoadListener != null) {
+                onLoadListener.onLoadSuccess(htmlPath);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            if (onLoadListener != null) {
+                onLoadListener.onLoadError(e);
+            }
         }
     }
 
@@ -336,7 +350,7 @@ public class WordUtil {
     }
 
     public void writeDocumentPicture(byte[] pictureBytes) {
-        picturePath = FileUtil.createFile("html", FileUtil.getFileName(docPath) + presentPicture + ".jpg");
+        picturePath = FileUtil.createFile(sdPath,"html", FileUtil.getFileName(docPath) + presentPicture + ".jpg");
         FileUtil.writePicture(picturePath, pictureBytes);
         presentPicture++;
         String imageString = String.format(imgBegin, picturePath);
@@ -387,5 +401,12 @@ public class WordUtil {
                 }
             }
         }
+    }
+
+    public interface OnDocLoadListener {
+
+        void onLoadSuccess(String htmlPath);
+
+        void onLoadError(Exception e);
     }
 }
