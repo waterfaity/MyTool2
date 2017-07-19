@@ -19,6 +19,7 @@ public class BaseSelfViewGroup extends AppCompatImageView {
     private int times = 100;//绘画频率
     private int sleepTime = 1;
     private boolean hasDrawFinish;
+    protected boolean canDraw;
 
     public BaseSelfViewGroup(Context context) {
         this(context, null);
@@ -63,7 +64,7 @@ public class BaseSelfViewGroup extends AppCompatImageView {
     /**
      * 数据初始化后 调用super.initData();
      */
-    protected void initData() {
+    protected void onInitDataOk() {
         onInitData();
     }
 
@@ -78,7 +79,9 @@ public class BaseSelfViewGroup extends AppCompatImageView {
             } else if (type == TYPE_DATA) {
                 dataState = state;
             }
+            canDraw = false;
             if (viewState && dataState) {
+                canDraw = true;
                 beforeDraw();
                 startDraw();
             }

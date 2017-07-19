@@ -40,8 +40,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.life:
                 startActivity(new Intent(this, LifeActivity.class));
-                break;   case R.id.document:
+                break;
+            case R.id.document:
                 startActivity(new Intent(this, OpenDocActivity.class));
+                break;
+            case R.id.lottie:
+                startActivity(new Intent(this, LottieActivity.class));
+                break;  case R.id.service:
+                startActivity(new Intent(this, ServiceTestActivity.class));
                 break;
         }
 

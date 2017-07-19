@@ -73,8 +73,18 @@
         <activity android:name=".activity.PDFActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.LottieActivity">
+        </activity>
+
+        <service android:name=".service.TestService">
+            <intent-filter>
+                <action android:name="com.waterfairy.too.testservice"/>
+            </intent-filter>
+        </service>
+
+        <activity android:name=".activity.ServiceTestActivity">
         </activity>
     </application>
 

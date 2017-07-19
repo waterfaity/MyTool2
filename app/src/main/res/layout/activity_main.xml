@@ -55,6 +55,22 @@
                 android:clickable="true"
                 android:onClick="onClick"
                 android:text="document"/>
+
+            <Button
+                android:id="@+id/lottie"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:text="lottie"/>
+
+            <Button
+                android:id="@+id/service"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:onClick="onClick"
+                android:text="service"/>
         </LinearLayout>
     </ScrollView>
 
