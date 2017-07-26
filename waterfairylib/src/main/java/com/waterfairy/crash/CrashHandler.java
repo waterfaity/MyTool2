@@ -205,7 +205,7 @@ public class CrashHandler implements Thread.UncaughtExceptionHandler {
                     canSave = true;
                 }
                 if (canSave) {
-                    FileOutputStream fos = new FileOutputStream(path + fileName);
+                    FileOutputStream fos = new FileOutputStream(file);
                     fos.write(sb.toString().getBytes());
                     fos.close();
                 }

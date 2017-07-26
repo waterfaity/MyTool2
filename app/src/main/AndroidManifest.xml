@@ -86,6 +86,8 @@
 
         <activity android:name=".activity.ServiceTestActivity">
         </activity>
+        <activity android:name=".classloader.ClassLoaderActivity">
+        </activity>
     </application>
 
 </manifest>
