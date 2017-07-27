@@ -801,7 +801,7 @@ public class ImageUtils {
      * @param style  方式  x,y,xy
      * @param length 宽度或长度
      * @param bitmap 平铺的图片
-     * @param extra  xy时  (length 作为宽 extra作为高)
+     * @param extra STYLE_XY时  (length 作为宽 extra作为高)
      * @return
      */
     public static Bitmap repeat(int style, int length, Bitmap bitmap, int extra) {
