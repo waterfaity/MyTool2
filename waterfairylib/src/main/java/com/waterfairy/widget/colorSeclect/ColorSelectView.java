@@ -1,6 +1,8 @@
 package com.waterfairy.widget.colorSeclect;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
@@ -8,7 +10,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.waterfairy.utils.AssetsUtils;
 import com.waterfairy.widget.baseView.BaseSelfViewGroup;
+
+import java.io.IOException;
 
 import static android.widget.LinearLayout.VERTICAL;
 
@@ -26,6 +31,8 @@ public class ColorSelectView extends BaseSelfViewGroup implements ColorTransitio
     private ColorCircleView colorCircleView;
     private LinearLayout contentView;
     private int padding;
+    private OnColorSelectListener onColorSelectListener;
+
 
     public ColorSelectView(Context context) {
         this(context, null);
@@ -41,7 +48,6 @@ public class ColorSelectView extends BaseSelfViewGroup implements ColorTransitio
         contentView = new LinearLayout(context);
         contentView.setOrientation(VERTICAL);
         addView(contentView);
-
         onInitDataOk();
     }
 
@@ -56,6 +62,8 @@ public class ColorSelectView extends BaseSelfViewGroup implements ColorTransitio
         colorTransitionViewDeep = new ColorTransitionView(context);
         colorTransitionViewAlpha = new ColorTransitionView(context);
 
+        colorCircleView.setOnColoSelectListener(onColorSelectListener);
+
         contentView.addView(colorCircleView);
         contentView.addView(colorTransitionViewDeep);
         contentView.addView(colorTransitionViewAlpha);
@@ -66,7 +74,7 @@ public class ColorSelectView extends BaseSelfViewGroup implements ColorTransitio
 
         LinearLayout.LayoutParams colorTransitionViewDeepLayoutParams = (LinearLayout.LayoutParams) colorTransitionViewDeep.getLayoutParams();
         colorTransitionViewDeepLayoutParams.width = mWidth - 2 * padding;
-        colorTransitionViewDeepLayoutParams.height = mWidth / 7;
+        colorTransitionViewDeepLayoutParams.height = mWidth / 6;
         colorTransitionViewDeepLayoutParams.topMargin = padding;
         colorTransitionViewDeep.setLayoutParams(colorTransitionViewDeepLayoutParams);
         colorTransitionViewAlpha.setLayoutParams(colorTransitionViewDeepLayoutParams);
@@ -85,4 +93,9 @@ public class ColorSelectView extends BaseSelfViewGroup implements ColorTransitio
             colorCircleView.updateAlpha(radio);
         }
     }
+
+    public void setOnColorSelectListener(OnColorSelectListener onColorSelectListener) {
+        this.onColorSelectListener=onColorSelectListener;
+    }
 }
+

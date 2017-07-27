@@ -835,4 +835,5 @@ public class ImageUtils {
         }
         return bitmapTemp;
     }
+
 }
