@@ -91,9 +91,9 @@ public class UserThread extends Thread {
                         }
                         listener.onRead(readBytes);
                     } else if (len == -1) {
-                        listener.onDisconnect();
-                        mDeviceHashMap.remove(ip);
-                        break;
+//                        listener.onDisconnect();
+//                        mDeviceHashMap.remove(ip);
+//                        break;
                     }
 
                 } else {

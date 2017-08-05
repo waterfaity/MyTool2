@@ -39,9 +39,12 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':waterfairylib')
+    compile files('src/main/libs/mqtt-client-0.4.0.jar')
+    compile files('src/main/libs/mqtt-client-0.4.0-javadoc.jar')
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.github.delight-im:Android-AdvancedWebView:v3.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.airbnb.android:lottie:1.0.1'
+    compile 'org.fusesource.mqtt-client:mqtt-client:1.14'
 }

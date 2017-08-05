@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.waterfairy.tool2.R;
+import com.waterfairy.tool2.rocketMQ.RocketMQActivity;
 import com.waterfairy.tool2.uttils.ZipUtils;
 import com.waterfairy.utils.PermissionUtils;
 
@@ -46,8 +47,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.lottie:
                 startActivity(new Intent(this, LottieActivity.class));
-                break;  case R.id.service:
+                break;
+            case R.id.service:
                 startActivity(new Intent(this, ServiceTestActivity.class));
+                break;
+            case R.id.rocket:
+                startActivity(new Intent(this, RocketMQActivity.class));
                 break;
         }
 
